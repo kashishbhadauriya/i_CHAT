@@ -12,7 +12,7 @@ A real-time chat application built using **Node.js**, **Socket.IO**, and **Expre
 - 👥 Shows total number of connected users
 - 📩 Message broadcasting to all clients
 - 🎨 Responsive UI (Mobile-friendly)
-- 🌙 Dark Theme toggle button
+
 
 ---
 
