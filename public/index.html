@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💬iChat App</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-vCHmNpP1T1EUPj8xVb1dbs4jqA7c8H7TXD1tAt5qj8Upt0FiQtYm5D7+jQeOROvN8GiQQguvh54heF0Uop/b3A=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 10px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .header {
+      text-align: center;
+      background-color: #4b7bec;
+      color: white;
+      padding: 15px 10px;
+      font-size: 20px;
+      font-weight: 600;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    .name input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 14px;
+    }
+
+    .message-container {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-left, .message-right {
+      margin-bottom: 10px;
+      display: flex;
+    }
+
+    .message-left .message {
+      background: #dff9fb;
+      align-self: flex-start;
+      border-radius: 15px 15px 15px 5px;
+    }
+
+    .message-right {
+      justify-content: flex-end;
+    }
+
+    .message-right .message {
+      background: #c7ecee;
+      border-radius: 15px 15px 5px 15px;
+    }
+
+    .message {
+      padding: 10px 14px;
+      max-width: 75%;
+      font-size: 14px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .message span {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      margin-top: 5px;
+    }
+
+    .message-feedback .feedback {
+      font-style: italic;
+      color: #718093;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .message-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    .message-input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 14px;
+    }
+
+    .send-button {
+      background-color: #4b7bec;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 25px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .clients-total {
+      font-size: 14px;
+      color: #4b4b4b;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .message-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .message-container::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+    /* Dark theme */
+    .dark {
+      background: #1e272e;
+      color: #fff;
+    }
+
+    .dark .container {
+      background: #2f3542;
+    }
+
+    .dark .header {
+      background-color: #1e90ff;
+    }
+
+    .dark .name,
+    .dark .message-form {
+      background-color: #3c3c3c;
+    }
+
+    .dark .message-left .message {
+      background: #57606f;
+      color: #fff;
+    }
+
+    .dark .message-right .message {
+      background: #747d8c;
+      color: #fff;
+    }
+
+    .dark .message-input,
+    .dark .name input {
+      background: #444;
+      color: white;
+      border-color: #666;
+    }
+
+    .dark .clients-total {
+      color: #dcdde1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      💬iChat
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+
+    <div class="name">
+      <span><i class="fa-solid fa-user"></i></span>
+      <input type="text" id="nameInput" class="name-input" value="anonymous.." maxlength="20" />
+    </div>
+
+    <ul class="message-container" id="message-container">
+      <li class="message-left">
+        <p class="message">
+          Welcome to iChat!
+          <span></span>
+        </p>
+      </li>
+
+      <li class="message-right">
+        <p class="message">
+          Hello, how are you?
+          <span></span>
+        </p>
+      </li>
+
+      <li class="message-feedback">
+        <p class="feedback" id="feedback"></p>
+      </li>
+    </ul>
+
+    <form action="#" class="message-form" id="message-form">
+      <input type="text" name="message" id="messageInput" class="message-input" placeholder="Type your message..." />
+      <button type="submit" class="send-button">
+        Send <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </form>
+
+    <h3 class="clients-total" id="clients-total">Total clients: 2</h3>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+  </script>
+</body>
+</html>
