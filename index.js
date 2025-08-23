@@ -27,6 +27,7 @@ mongoose.connect(MONGO_URI, {
 const messageSchema = new mongoose.Schema({
   name: String,
   message: String,
+   socketId: String, 
   timestamp: { type: Date, default: Date.now },
 });
 
@@ -53,19 +54,24 @@ io.on('connection', (socket) => {
 
   io.emit('clients-total', io.engine.clientsCount);
 
-  socket.on('message', async (data) => {
-    console.log(data);
+ socket.on('message', async (data) => {
+  // Agar naam empty hai, message save na karo
+  if (!data.name || data.name.trim() === '') {
+    socket.emit('error-message', 'Please enter your name before sending a message.');
+    return;
+  }
 
-    // Save message to MongoDB
-    const newMessage = new Message({
-      name: data.name,
-      message: data.message,
-    });
-
-    await newMessage.save();
-
-    io.emit('message', data);
+  const newMessage = new Message({
+    name: data.name,
+    message: data.message,
+    timestamp: data.timestamp || new Date(),
   });
+
+  await newMessage.save();
+
+  io.emit('message', { ...data, id: socket.id });
+});
+
 
   socket.on('typing', (data) => {
     socket.broadcast.emit('typing', data);
